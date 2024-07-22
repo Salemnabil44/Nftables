@@ -14,9 +14,9 @@ nft delete table ip6 mon_filtreIP
 
 ### Création d'une chaine : 
 Nous avons donc vu qu'il fallait créer une chaine INPUT pour traiter les paquets qui arrivent sur l'interface et une chaine OUPUT 
-pour traiter ceux qui sortent de l'interface réseau. 
-root@debian:~# nft add chain ip mon_filtreIPv4 input { type filter hook input priority 0 \; }
-root@debian:~# nft add chain ip mon_filtreIPv4 output { type filter hook output priority 0 \; }
+pour traiter ceux qui sortent de l'interface réseau.    
+root@debian:~# nft add chain ip mon_filtreIPv4 input { type filter hook input priority 0 \; }   
+root@debian:~# nft add chain ip mon_filtreIPv4 output { type filter hook output priority 0 \; }   
 
 Explications
 
