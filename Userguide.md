@@ -94,25 +94,25 @@ Pour cibler une plage IP plutôt qu'une IP, la syntaxe CIDR peut-être utilisée
 Avec cette commande, nous venons de bloquer les paquets ayant comme IP source une IP de la plage 192.168.10.0/24.
 
 ### Gérer l'ICMP
-Partons du principe le plus courant, je souhaite que ma machine puisse pinguer d'autres machines, mais ne puisse pas être pinguée. Dans le langage du filtrage, cela signifie :
+Partons du principe le plus courant, je souhaite que ma machine puisse pinguer d'autres machines, mais ne puisse pas être pinguée. Dans le langage du filtrage, cela signifie :  
 
-ICMP en entrée (INPUT) : non autorisé
-ICMP en sortie (OUTPUT) : autorisé
+ICMP en entrée (INPUT) : non autorisé   
+ICMP en sortie (OUTPUT) : autorisé   
 
-On commence par créer notre table, que nous appellerons mon_filtreICMP et deux chaines, une liée au hook INPUT et l'autre au hook OUTPUT :
-root@debian:~# nft add table ip mon_filtreICMP 
-root@debian:~# nft add chain ip mon_filtreICMP input { type filter hook input priority 0 \; }
-root@debian:~# nft add chain ip mon_filtreICMP output { type filter hook output priority 0 \; }
+On commence par créer notre table, que nous appellerons mon_filtreICMP et deux chaines, une liée au hook INPUT et l'autre au hook OUTPUT :   
+root@debian:~#  nft add table ip mon_filtreICMP    
+root@debian:~#  nft add chain ip mon_filtreICMP input { type filter hook input priority 0 \; }   
+root@debian:~#  nft add chain ip mon_filtreICMP output { type filter hook output priority 0 \; }   
 
-On passe ensuite à l'autorisation des paquets ICMP de type echo-request en sortie, puis on refuse le reste :
-root@debian:~# nft add rule mon_filtreICMP output icmp type echo-request accept
-root@debian:~# nft add rule mon_filtreICMP output drop
+On passe ensuite à l'autorisation des paquets ICMP de type echo-request en sortie, puis on refuse le reste :   
+root@debian:~#  nft add rule mon_filtreICMP output icmp type echo-request accept   
+root@debian:~#  nft add rule mon_filtreICMP output drop   
 
-Enfin, on positionne nos règles pour le chemin de retour :
-root@debian:~# nft add rule mon_filtreICMP input icmp type echo-reply accept
-root@debian:~# nft add rule mon_filtreICMP input drop
+Enfin, on positionne nos règles pour le chemin de retour :   
+root@debian:~# nft add rule mon_filtreICMP input icmp type echo-reply accept   
+root@debian:~# nft add rule mon_filtreICMP input drop   
 
-Essayons de pinguer une autre machine que vous savez joignable sur le réseau, cela devrait fonctionner, puis tester de vous pinger depuis cette machine, cela ne fonctionnera pas.
+Essayons de pinguer une autre machine que vous savez joignable sur le réseau, cela devrait fonctionner, puis tester de vous pinger depuis cette machine, cela ne fonctionnera pas.   
 
 
 
