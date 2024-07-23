@@ -114,8 +114,34 @@ root@debian:~# nft add rule mon_filtreICMP input drop
 
 Essayons de pinguer une autre machine que vous savez joignable sur le réseau, cela devrait fonctionner, puis tester de vous pinger depuis cette machine, cela ne fonctionnera pas.   
 
+### Gestion des flags TCP
+Rappel de ce qu'est le Transmission Control Protocol 
+- flag SYN pour demander l'établissement d'une session   
+- flag SYN/ACK pour confirmer la demande   
+- flag ACK pour acquitter la bonne réception de la confirmation   
+- flag FIN pour mettre fin à la session
 
+Les flags TCP, voici leur dénomination (en général, et dans nftables) :
 
+- Fin   
+- Syn   
+- Rst  
+- Psh  
+- Ack  
+- Urg
+
+Pour compter tous les paquets TCP qui ont un flag autre que SYN d'actif, le tout en entrée :   
+root@debian:~# nft add rule mon_filtre input tcp flags != syn counter   
+
+ Voici une règle qui va compter tous les paquets TCP NULL, c’est-à-dire qui n'ont aucun flag actif :   
+
+root@debian:~# nft add rule mon_filtre output tcp flags \& \(fin\|syn\|rst\|psh\|ack\|urg\) \< fin counter   
+
+Voici une règle qui va compter tous les paquets TCP XMAS, c’est-à-dire qui ont les flags FIN, PSH et USH d'actif :   
+
+root@debian:~# nft add rule mon_filtre input tcp flags \& \(fin\|syn\|rst\|psh\|ack\|urg\) \> urg counter   
+  
+Voici les notions de base de Nftables, pour des manipulations plus avancées , se rendre sur le site internet 
 
 
 
